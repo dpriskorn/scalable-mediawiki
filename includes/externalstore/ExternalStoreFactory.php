@@ -101,6 +101,9 @@ class ExternalStoreFactory implements LoggerAwareInterface {
 			$params['lbFactory'] = MediaWikiServices::getInstance()->getDBLoadBalancerFactory();
 		} elseif ( $protoLowercase === 'mwstore' ) {
 			$params['fbGroup'] = MediaWikiServices::getInstance()->getFileBackendGroup();
+		} elseif ( $protoLowercase === 's3' ) {
+			$s3Config = MediaWikiServices::getInstance()->getMainConfig()->get( 'ExternalStoreS3Config' );
+			$params = array_merge( $params, $s3Config );
 		}
 		$params['logger'] = $this->logger;
 

@@ -3527,6 +3527,39 @@ class MainConfigSchema {
 	];
 
 	/**
+	 * Configuration for S3-compatible external storage.
+	 *
+	 * This is used by ExternalStoreS3 when 'S3' is enabled in $wgExternalStores.
+	 *
+	 * **Example:**
+	 *
+	 * ```
+	 * $wgExternalStoreS3Config = [
+	 *     'endpoint' => 'https://s3.example.com',
+	 *     'region' => 'us-east-1',
+	 *     'accessKey' => 'your-access-key',
+	 *     'secretKey' => 'your-secret-key',
+	 *     'usePathStyle' => true,  // Required for MinIO, Ceph, etc.
+	 * ];
+	 * ```
+	 *
+	 * Configuration options:
+	 * - endpoint: S3 endpoint URL (required)
+	 * - region: S3 region (default: 'us-east-1')
+	 * - accessKey: S3 access key (required)
+	 * - secretKey: S3 secret key (required)
+	 * - usePathStyle: Use path-style URLs instead of virtual-hosted style (default: true)
+	 * - readOnly: Set to true to prevent writes (default: false)
+	 *
+	 * @since 1.46
+	 * @see ExternalStoreS3
+	 */
+	public const ExternalStoreS3Config = [
+		'default' => [],
+		'type' => 'map',
+	];
+
+	/**
 	 * Revision text may be cached in the main WAN cache to reduce load on external
 	 * storage servers and object extraction overhead for frequently-loaded revisions.
 	 *
