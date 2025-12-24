@@ -1,0 +1,78 @@
+services:
+  mediawiki:
+    build:
+      context: .
+      dockerfile: Dockerfile.mediawiki
+    environment:
+        WG_EXTERNALSTORE_CLASS: ExternalStoreS3
+        WG_EXTERNALSTORE_S3_ENDPOINT: http://seaweedfs:8333
+        WG_EXTERNALSTORE_S3_BUCKET: testbucket
+        WG_EXTERNALSTORE_S3_KEY: fakekey
+        WG_EXTERNALSTORE_S3_SECRET: fakesecret    
+    image: mediawiki-dev:latest
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+      s3-create-bucket:
+        condition: service_completed_successfully
+
+  mediawiki-jobrunner:
+    image: mediawiki-dev:latest
+    depends_on:
+      mediawiki:
+        condition: service_started
+    command:
+      - php
+      - maintenance/run.php
+      - runJobs.php
+      - --maxjobs=100
+      
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    container_name: seaweedfs
+    ports:
+      - "9333:9333"   # Master HTTP
+      - "8081:8080"   # Volume HTTP / UI
+      - "8888:8888"   # Filer HTTP (S3 backend)
+      - "8333:8333"   # S3 Gateway
+      - "18080:18080" # Volume / Master Web UI
+    volumes:
+      - ./seaweedfs_data:/data
+    command: server -dir=/data -s3
+    environment:
+      WEED_S3_ACCESS_KEY: fakekey
+      WEED_S3_SECRET_KEY: fakesecret
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8333"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  s3-init:
+    image: minio/mc
+    depends_on:
+      seaweedfs:
+        condition: service_healthy
+    command: ["mc", "alias", "set", "s3seaweed", "http://seaweedfs:8333", "fakekey", "fakesecret"]
+
+  s3-create-bucket:
+    image: minio/mc
+    depends_on:
+      s3-init:
+        condition: service_completed_successfully
+    network_mode: "service:seaweedfs"
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      set -e
+
+      echo "Creating bucket (if not exists)..."
+      mc mb --ignore-existing s3seaweed/testbucket
+
+      echo "Writing test object..."
+      echo "ok" | mc pipe s3seaweed/testbucket/healthcheck.txt
+
+      echo "Verifying test object..."
+      mc stat s3seaweed/testbucket/healthcheck.txt
+
+      echo "S3 health check passed"
+

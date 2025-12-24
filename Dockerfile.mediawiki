@@ -1,0 +1,26 @@
+# Dockerfile.mediawiki
+FROM docker-registry.wikimedia.org/dev/bookworm-php83-fpm:1.0.0
+
+WORKDIR /var/www/html/w
+COPY . /var/www/html/w
+
+# 1️⃣ Copy ONLY composer files first (cache-friendly)
+COPY composer.json composer.lock ./
+
+# 2️⃣ Install dependencies (cached unless composer files change)
+RUN composer install --no-interaction --prefer-dist
+
+# 3️⃣ Copy the rest of the MediaWiki source
+COPY . .
+
+# Entrypoint script will handle installation
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Create MediaWiki log directory
+RUN mkdir -p /var/log/mediawiki \
+ && chown -R www-data:www-data /var/log/mediawiki \
+ && chmod 755 /var/log/mediawiki
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["php-fpm8.3", "-F"]

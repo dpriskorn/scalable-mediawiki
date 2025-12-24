@@ -91,5 +91,7 @@ Thumbs.db
 *.rej
 
 # Docker
-docker-compose.override.yml
+# docker-compose.override.yml
 .env
+seaweedfs_data
+seaweedfs_vol
