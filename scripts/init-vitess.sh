@@ -1,36 +1,33 @@
 #!/bin/bash
-
 set -e
 
-VITESS_CELLS="zone1"
 SHARDED_KEYSPACE="sharded_keyspace"
 USER_KEYSPACE="user_keyspace"
 
-echo "Initializing Vitess for MediaWiki..."
-
-echo "Creating sharded keyspace..."
-vtctlclient CreateKeyspace \
-  --sharding_keyspace_type=sharded \
-  --force \
-  "$SHARDED_KEYSPACE"
-
-echo "Creating 2 shards for sharded keyspace..."
-for i in {0..1}; do
-  vtctlclient CreateShard \
-    --force \
-    "$SHARDED_KEYSPACE/${i}"
+echo "Waiting for Vitess topology..."
+until vtctlclient GetKeyspaces >/dev/null 2>&1; do
+  echo "  vtgate not ready yet..."
+  sleep 2
 done
 
-echo "Creating user keyspace..."
-vtctlclient CreateKeyspace \
-  --sharding_keyspace_type=sharded \
-  --force \
-  "$USER_KEYSPACE"
+echo "Initializing Vitess for MediaWiki..."
 
-echo "Creating 1 shard for user keyspace..."
-vtctlclient CreateShard \
-    --force \
-    "$USER_KEYSPACE/0"
+create_keyspace() {
+  local ks="$1"
+  vtctlclient GetKeyspace "$ks" >/dev/null 2>&1 || \
+    vtctlclient CreateKeyspace --sharding_keyspace_type=sharded "$ks"
+}
+
+create_shard() {
+  local shard="$1"
+  vtctlclient GetShard "$shard" >/dev/null 2>&1 || \
+    vtctlclient CreateShard "$shard"
+}
+
+echo "Creating sharded keyspace..."
+create_keyspace "$SHARDED_KEYSPACE"
+create_shard "$SHARDED_KEYSPACE/0"
+create_shard "$SHARDED_KEYSPACE/1"
 
 echo "Applying VSchema for sharded keyspace..."
 vtctlclient ApplyVSchema \
@@ -38,17 +35,10 @@ vtctlclient ApplyVSchema \
   "$SHARDED_KEYSPACE"
 
 echo "Creating user keyspace..."
-vtctlclient CreateKeyspace \
-  --sharding_keyspace_type=sharded \
-  --force \
-  "$USER_KEYSPACE"
+create_keyspace "$USER_KEYSPACE"
 
-echo "Creating 4 shards for user keyspace..."
-for i in {0..3}; do
-  vtctlclient CreateShard \
-    --force \
-    "$USER_KEYSPACE/${i}"
-done
+# IMPORTANT: match tablets → shards (you only have ONE user tablet)
+create_shard "$USER_KEYSPACE/0"
 
 echo "Applying VSchema for user keyspace..."
 vtctlclient ApplyVSchema \

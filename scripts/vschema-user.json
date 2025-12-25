@@ -1,45 +1,26 @@
 {
-   "sharded": true,
-   "vindexes": {
-     "user_hash": {
-       "type": "hash",
-       "params": {
-         "num_shards": 1
-       }
-     }
-   },
-  "tables": {
-    "user": {
-      "column_vindexes": [
-        {
-          "column": "user_id",
-          "name": "user_hash"
-        }
-      ]
-    },
-    "user_recentchanges": {
-      "column_vindexes": [
-        {
-          "column": "user_id",
-          "name": "user_hash"
-        }
-      ]
-    },
-    "actor": {
-      "column_vindexes": [
-        {
-          "column": "actor_id",
-          "name": "user_hash"
-        }
-      ]
-    },
-    "comment": {
-      "column_vindexes": [
-        {
-          "column": "comment_id",
-          "name": "user_hash"
-        }
-      ]
-    }
-  }
+	"sharded": true,
+	"vindexes": {
+		"user_hash": {
+			"type": "hash"
+		}
+	},
+	"tables": {
+		"user": {
+			"column_vindexes": [
+				{
+					"column": "user_id",
+					"name": "user_hash"
+				}
+			]
+		},
+		"user_recentchanges": {
+			"column_vindexes": [
+				{
+					"column": "user_id",
+					"name": "user_hash"
+				}
+			]
+		}
+	}
 }
