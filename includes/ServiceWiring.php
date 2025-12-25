@@ -2657,42 +2657,16 @@ return [
 		);
 	},
 
-	'WatchedItemStore' => static function ( MediaWikiServices $services ): WatchedItemStore {
-		$store = new WatchedItemStore(
-			new ServiceOptions( WatchedItemStore::CONSTRUCTOR_OPTIONS,
-				$services->getMainConfig() ),
-			$services->getDBLoadBalancerFactory(),
-			$services->getJobQueueGroup(),
-			$services->getMainObjectStash(),
-			new HashBagOStuff( [ 'maxKeys' => 100 ] ),
+	'WatchedItemStore' => static function ( MediaWikiServices $services ): MediaWiki\Watchlist\MinimalWatchedItemStore {
+		return new MediaWiki\Watchlist\MinimalWatchedItemStore(
 			$services->getReadOnlyMode(),
-			$services->getNamespaceInfo(),
-			$services->getRevisionLookup(),
-			$services->getLinkBatchFactory(),
-			$services->getStatsFactory()
+			$services->getDBLoadBalancerFactory()
 		);
-
-		if ( $services->getMainConfig()->get( MainConfigNames::ReadOnlyWatchedItemStore ) ) {
-			$store = new NoWriteWatchedItemStore( $store );
-		}
-
-		return $store;
 	},
 
-	'WatchlistManager' => static function ( MediaWikiServices $services ): WatchlistManager {
-		return new WatchlistManager(
-			[
-				WatchlistManager::OPTION_ENOTIF =>
-					RecentChange::isEnotifEnabled( $services->getMainConfig() ),
-			],
-			$services->getHookContainer(),
-			$services->getReadOnlyMode(),
-			$services->getRevisionLookup(),
-			$services->getTalkPageNotificationManager(),
-			$services->getWatchedItemStore(),
-			$services->getUserFactory(),
-			$services->getNamespaceInfo(),
-			$services->getWikiPageFactory()
+	'WatchlistManager' => static function ( MediaWikiServices $services ): MediaWiki\Watchlist\MinimalWatchlistManager {
+		return new MediaWiki\Watchlist\MinimalWatchlistManager(
+			$services->getWatchedItemStore()
 		);
 	},
 
