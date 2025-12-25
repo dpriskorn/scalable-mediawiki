@@ -11,7 +11,9 @@ services:
         WG_EXTERNALSTORE_S3_SECRET: fakesecret
     image: mediawiki-dev:latest
     depends_on:
-      vtgate:
+      valkey:
+        condition: service_healthy
+      vitess:
         condition: service_started
       seaweedfs:
         condition: service_healthy
@@ -82,223 +84,25 @@ services:
   # -- Valkey --
   valkey:
     image: valkey/valkey:latest
-    container_name: vitess_valkey
     ports:
       - "6379:6379"
     command: >
       valkey-server
       --requirepass valkeypass
-    #restart: unless-stopped
 
-  # -- Vitess --
-  etcd:
-    image: quay.io/coreos/etcd:v3.5.9
-    container_name: vitess_etcd
-    ports:
-      - "2379:2379"
-      - "2380:2380"
+  vitess:
+    image: vitess/vttestserver:mysql80
     environment:
-      - ETCD_NAME=etcd0
-      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd:2380
-      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
-      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
-      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
-      - ETCD_INITIAL_CLUSTER=etcd0=http://etcd:2380
-      - ETCD_INITIAL_CLUSTER_STATE=new
-      - ETCD_INITIAL_CLUSTER_TOKEN=etcd-cluster
-    restart: unless-stopped
-
-  vtctld:
-    image: vitess/lite:latest
-    container_name: vitess_vtctld
+      KEYSPACES: page
+      NUM_SHARDS: 2
+      PORT: 15306
+      MYSQL_BIND_HOST: 0.0.0.0
+      CHARSET: utf8mb4
+      MYSQL_MAX_CONNECTIONS: 1000
+      FOREIGN_KEY_MODE: disallow
     ports:
-      - "15000:15000"
-      - "15999:15999"
-    volumes:
-      - ./scripts:/scripts
-    command: >
-      /vt/bin/vtctld
-      --topo_implementation etcd2
-      --topo_global_server_address etcd:2379
-      --topo_global_root /vitess/global
-      --web_ui2
-      --port 15000
-      --grpc_port 15999
-      --log_dir /vt/logs
+      # vtgate MySQL protocol → PORT + 3
+      - "15309:15309"
 
-    depends_on:
-      - etcd
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:15000/debug/status"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-    #restart: unless-stopped
-
-  vtgate:
-    image: vitess/lite:latest
-    container_name: vitess_vtgate
-    ports:
-      - "15306:15306"
-      - "15991:15991"
-    volumes:
-      - ./scripts:/scripts
-    command: >
-      /vt/bin/vtgate
-      --topo_implementation etcd2
-      --topo_global_server_address etcd:2379
-      --topo_global_root /vitess/global
-      --cell zone1
-      --port 15306
-      --grpc_port 15991
-      --mysql_server_port 3306
-      --mysql_auth_server_impl none
-      --log_dir /vt/logs
-
-    depends_on:
-      - vtctld
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:15306/debug/status"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-    #restart: unless-stopped
-
-  vttablet-zone1-0:
-    image: vitess/lite:latest
-    container_name: vitess_vttablet_zone1_0
-    ports:
-      - "16000:16000"
-      - "16100:16100"
-    volumes:
-      - ./scripts:/scripts
-      - vitess_data_zone1_0:/vt/vtdataroot
-    command: >
-      /vt/bin/vttablet
-      -topo_implementation etcd2
-      -topo_global_server_address etcd:2379
-      -topo_global_root /vitess/global
-      -tablet_uid 100
-      -cell zone1
-      -port 16000
-      -grpc_port 16100
-      -mysql_port 3306
-      -db_host vttablet-zone1-0
-      -db_port 3306
-      -db_appuser vt_app
-      -db_dbauser vt_dba
-      -db_app_password vt_app
-      -db_dba_password vt_dba
-      -init_shard_only
-      -init_keyspace sharded_keyspace
-      -init_shard 0
-      -enable_semi_sync
-      -onterm graceful_shutdown
-    depends_on:
-      - etcd
-    #restart: unless-stopped
-
-  vttablet-zone1-1:
-    image: vitess/lite:latest
-    container_name: vitess_vttablet_zone1_1
-    ports:
-      - "16001:16001"
-      - "16101:16101"
-    volumes:
-      - ./scripts:/scripts
-      - vitess_data_zone1_1:/vt/vtdataroot
-    command: >
-      /vt/bin/vttablet
-      --topo_implementation etcd2
-      --topo_global_server_address etcd:2379
-      --topo_global_root /vitess/global
-      --tablet_uid 101
-      --cell zone1
-      --port 16001
-      --grpc_port 16101
-      --mysql_port 3306
-      --db_host vttablet-zone1-1
-      --db_port 3306
-      --db_appuser vt_app
-      --db_dbauser vt_dba
-      --db_app_password vt_app
-      --db_dba_password vt_dba
-      --init_shard_only
-      --init_keyspace sharded_keyspace
-      --init_shard 1
-      --enable_semi_sync
-      --onterm graceful_shutdown
-
-    depends_on:
-      - etcd
-    #restart: unless-stopped
-
-  vttablet-user-0:
-    image: vitess/lite:latest
-    container_name: vitess_vttablet_user_0
-    ports:
-      - "16002:16002"
-      - "16102:16102"
-    volumes:
-      - ./scripts:/scripts
-      - vitess_data_user_0:/vt/vtdataroot
-    command: >
-      /vt/bin/vttablet
-      --topo_implementation etcd2
-      --topo_global_server_address etcd:2379
-      --topo_global_root /vitess/global
-      --tablet_uid 200
-      --cell zone1
-      --port 16002
-      --grpc_port 16102
-      --mysql_port 3306
-      --db_host vttablet-user-0
-      --db_port 3306
-      --db_appuser vt_app
-      --db_dbauser vt_dba
-      --db_app_password vt_app
-      --db_dba_password vt_dba
-      --init_shard_only
-      --init_keyspace user_keyspace
-      --init_shard 0
-      --enable_semi_sync
-      --onterm graceful_shutdown
-    depends_on:
-      - etcd
-    #restart: unless-stopped
-
-  vitess-init:
-    image: vitess/lite:latest
-    container_name: vitess_init
-    volumes:
-      - ./scripts:/scripts
-      - ./vschema:/vschema
-    command: bash /scripts/init-vitess.sh
-    environment:
-      - TOPOLOGY_SERVER=etcd:2379
-      - TOPOLOGY_ROOT=/vitess/global
-    depends_on:
-      - vtgate
-      - vttablet-zone1-0
-      - vttablet-zone1-1
-      - vttablet-user-0
-
-  vtctld-client:
-    image: vitess/lite:latest
-    container_name: vitess_vtctld_client
-    volumes:
-      - ./scripts:/scripts
-    stdin_open: true
-    tty: true
-    command: bash
-    environment:
-      - TOPOLOGY_SERVER=etcd:2379
-      - TOPOLOGY_ROOT=/vitess/global
-    depends_on:
-      - vitess-init
-    # restart: unless-stopped
-
-volumes:
-  vitess_data_zone1_0:
-  vitess_data_zone1_1:
-  vitess_data_user_0:
+      # optional: raw MySQL for debug (PORT + 1)
+      - "15307:15307"
