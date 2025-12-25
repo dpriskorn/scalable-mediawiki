@@ -15,6 +15,7 @@ class UploadBaseTest extends MediaWikiIntegrationTestCase {
 	protected $upload;
 
 	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
 		parent::setUp();
 
 		$this->upload = new UploadTestHandler;

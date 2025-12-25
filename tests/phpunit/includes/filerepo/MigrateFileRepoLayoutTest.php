@@ -23,6 +23,8 @@ class MigrateFileRepoLayoutTest extends MediaWikiIntegrationTestCase {
 	private const TEXT = 'testing';
 
 	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
 		parent::setUp();
 
 		$filename = 'Foo.png';

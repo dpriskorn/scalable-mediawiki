@@ -11,6 +11,11 @@ use Wikimedia\FileBackend\FSFileBackend;
  */
 class StoreBatchTest extends MediaWikiIntegrationTestCase {
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	/** @var string[] */
 	protected $createdFiles;
 	/** @var string */

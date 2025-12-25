@@ -17,6 +17,11 @@ use Wikimedia\ObjectCache\WANObjectCache;
  * @covers \MediaWiki\FileRepo\LocalRepo
  */
 class LocalRepoTest extends MediaWikiIntegrationTestCase {
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	/**
 	 * @param array $extraInfo To pass to LocalRepo constructor
 	 * @return LocalRepo

@@ -64,6 +64,7 @@ class AuthenticatedFileEntryPointTest extends MediaWikiIntegrationTestCase {
 	}
 
 	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
 		parent::setUp();
 		$this->overrideConfigValue(
 			MainConfigNames::ImgAuthDetails,

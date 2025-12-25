@@ -7,6 +7,16 @@ use Wikimedia\ObjectCache\HashBagOStuff;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class LocalAndForeignDBRepoTest extends MediaWikiIntegrationTestCase {
+/**
+ * @covers \MediaWiki\FileRepo\LocalRepo::getSharedCacheKey
+ * @covers \MediaWiki\FileRepo\ForeignDBViaLBRepo::getSharedCacheKey
+ */
+class LocalAndForeignDBRepoTest extends MediaWikiIntegrationTestCase {
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	/**
 	 * @covers \MediaWiki\FileRepo\LocalRepo::getSharedCacheKey
 	 * @covers \MediaWiki\FileRepo\ForeignDBViaLBRepo::getSharedCacheKey

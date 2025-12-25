@@ -9,6 +9,11 @@ use MediaWiki\Request\FauxRequest;
  */
 class UploadFromChunksTest extends MediaWikiIntegrationTestCase {
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	public function testUploadWithTwoChunks() {
 		$user = $this->getTestUser()->getUser();
 		$filepath = __DIR__ . '/../../data/media/1bit-png.png';

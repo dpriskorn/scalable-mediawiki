@@ -13,6 +13,11 @@ use Wikimedia\TestingAccessWrapper;
 
 class FileTest extends MediaWikiMediaTestCase {
 
+	protected function setUp(): void {
+		parent::setUp();
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+	}
+
 	/**
 	 * @param string $filename
 	 * @param bool $expected

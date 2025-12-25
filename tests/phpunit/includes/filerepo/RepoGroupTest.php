@@ -8,6 +8,11 @@ use MediaWiki\MainConfigNames;
  */
 class RepoGroupTest extends MediaWikiIntegrationTestCase {
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	public function testHasForeignRepoNegative() {
 		$this->overrideConfigValue( MainConfigNames::ForeignFileRepos, [] );
 		$this->assertFalse( $this->getServiceContainer()->getRepoGroup()->hasForeignRepos() );

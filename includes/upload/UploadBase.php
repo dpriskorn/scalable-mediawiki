@@ -215,6 +215,7 @@ abstract class UploadBase {
 	 * @return null|self
 	 */
 	public static function createFromRequest( &$request, $type = null ) {
+		return null;
 		$type = $type ?: $request->getVal( 'wpSourceType', 'File' );
 
 		if ( !$type ) {
@@ -995,6 +996,7 @@ abstract class UploadBase {
 	public function performUpload(
 		$comment, $pageText, $watch, $user, $tags = [], ?string $watchlistExpiry = null
 	) {
+		return Status::newFatal( 'Upload functionality is disabled' );
 		$this->getLocalFile()->load( IDBAccessObject::READ_LATEST );
 		$props = $this->mFileProps;
 

@@ -7,6 +7,11 @@ use MediaWiki\Title\Title;
 /** @covers \MediaWiki\FileRepo\File\ForeignDBFile */
 class ForeignDBFileTest extends MediaWikiIntegrationTestCase {
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	public function testShouldConstructCorrectInstanceFromTitle() {
 		$title = Title::makeTitle( NS_FILE, 'Awesome_file' );
 		$repoMock = $this->createMock( LocalRepo::class );

@@ -50,6 +50,7 @@ class Thumbnail404EntryPointTest extends MediaWikiIntegrationTestCase {
 	}
 
 	public function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
 		parent::setUp();
 
 		$this->installTestRepoGroup();

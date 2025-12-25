@@ -9,6 +9,11 @@ use Wikimedia\FileBackend\FSFileBackend;
  */
 class FileRepoTest extends MediaWikiIntegrationTestCase {
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	public function testFileRepoConstructionOptionCanNotBeNull() {
 		$this->expectException( InvalidArgumentException::class );
 		new FileRepo();

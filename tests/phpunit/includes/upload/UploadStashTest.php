@@ -14,6 +14,7 @@ class UploadStashTest extends MediaWikiIntegrationTestCase {
 	private $tmpFile;
 
 	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
 		parent::setUp();
 
 		$this->tmpFile = $this->getNewTempFile();

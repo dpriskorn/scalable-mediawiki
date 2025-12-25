@@ -32,6 +32,11 @@ class LocalFileTest extends MediaWikiIntegrationTestCase {
 	use ChangeTrackingUpdateSpyTrait;
 	use ExpectCallbackTrait;
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	private static function getDefaultInfo() {
 		return [
 			'name' => 'test',

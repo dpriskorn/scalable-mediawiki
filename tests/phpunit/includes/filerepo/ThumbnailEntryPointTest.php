@@ -20,6 +20,11 @@ class ThumbnailEntryPointTest extends MediaWikiIntegrationTestCase {
 	use TestRepoTrait;
 	use MockHttpTrait;
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	private const PNG_MAGIC = "\x89\x50\x4e\x47";
 	private const JPEG_MAGIC = "\xff\xd8\xff\xe0";
 

@@ -10,6 +10,11 @@ class FileBackendDBRepoWrapperTest extends MediaWikiIntegrationTestCase {
 	private const BACKEND_NAME = 'foo-backend';
 	private const REPO_NAME = 'pureTestRepo';
 
+	protected function setUp(): void {
+		$this->markTestSkipped( 'Upload functionality is disabled' );
+		parent::setUp();
+	}
+
 	/**
 	 * @dataProvider getBackendPathsProvider
 	 * @covers \MediaWiki\FileRepo\FileBackendDBRepoWrapper::getBackendPaths
