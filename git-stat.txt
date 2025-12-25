@@ -1,7 +1,6 @@
  .gitignore                                         |    3 +-
  api.php                                            |   46 +-
- docker-compose.override.yml                        |   47 +-
- git-stat.txt                                       |  240 ---
+ git-stat.txt                                       |  359 ----
  includes/ServiceWiring.php                         |   38 +-
  includes/actions/CreditsAction.php                 |  278 ---
  includes/actions/DeleteAction.php                  |  651 -------
@@ -356,4 +355,4 @@
  tests/phpunit/maintenance/PurgePageTest.php        |  115 --
  .../phpunit/maintenance/PurgeRecentChangesTest.php |   54 -
  tests/phpunit/maintenance/RollbackEditsTest.php    |  136 --
- 358 files changed, 59 insertions(+), 75058 deletions(-)
+ 357 files changed, 13 insertions(+), 75176 deletions(-)
