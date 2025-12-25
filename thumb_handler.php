@@ -1,47 +1,62 @@
 <?php
 /**
- * The web entry point to be used as 404 handler behind a web server rewrite
- * rule for media thumbnails, internally handled via thumb.php.
+ * Thumbnail Handler Disabled
  *
- * This script will interpret a request URL like
- * `/w/images/thumb/a/a9/Example.jpg/50px-Example.jpg` and treat it as
- * if it was a request to thumb.php with the relevant query parameters filled
- * out. See also $wgGenerateThumbnailOnParse.
- *
- * @see thumb.php
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
- * http://www.gnu.org/copyleft/gpl.html
- *
- * @file
- * @ingroup entrypoint
- * @ingroup Media
+ * The thumbnail handler has been disabled for this MediaWiki installation.
+ * File uploads and thumbnails are not available.
  */
 
-use MediaWiki\Context\RequestContext;
-use MediaWiki\EntryPointEnvironment;
-use MediaWiki\FileRepo\Thumbnail404EntryPoint;
-use MediaWiki\MediaWikiServices;
-
-define( 'MW_NO_OUTPUT_COMPRESSION', 1 );
-define( 'MW_ENTRY_POINT', 'thumb_handler' );
-
-require __DIR__ . '/includes/WebStart.php';
-
-( new Thumbnail404EntryPoint(
-	RequestContext::getMain(),
-	new EntryPointEnvironment(),
-	MediaWikiServices::getInstance()
-) )->run();
+http_response_code( 404 );
+header( 'Content-Type: text/html; charset=utf-8' );
+echo <<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Not Found - Thumbnails Disabled</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
+        }
+        .error-container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #d33;
+            margin-top: 0;
+        }
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #36c;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-link:hover {
+            background: #2a5b;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Thumbnails Disabled</h1>
+        <p>The thumbnail handler has been disabled for this MediaWiki installation.</p>
+        <p>File uploads and image thumbnails are not available.</p>
+        <p><a href="/" class="back-link">Return to Wiki</a></p>
+    </div>
+</body>
+</html>
+HTML;
