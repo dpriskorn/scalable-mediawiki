@@ -89,6 +89,11 @@ services:
     command: >
       valkey-server
       --requirepass valkeypass
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-a", "valkeypass", "PING"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   vitess:
     image: vitess/vttestserver:mysql80
