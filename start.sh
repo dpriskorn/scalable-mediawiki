@@ -27,7 +27,7 @@ $DC down
 
 # Start all services with Vitess compose file
 echo "📦 Starting all services..."
-$DC -f docker-compose.yml -f docker-compose.vitess.yml -f docker-compose.override.yml up -d --build
+$DC -f docker-compose.yml -f docker-compose.override.yml up -d --build
 
 echo ""
 echo "⏳ Waiting for services to be ready..."
@@ -35,8 +35,18 @@ echo "⏳ Waiting for services to be ready..."
 # Wait for etcd (Vitess requires it)
 echo "   - Waiting for etcd..."
 for i in {1..30}; do
-    if docker exec mediawiki-etcd-1 etcdctl endpoint health &> /dev/null; then
+    if docker exec vitess_etcd etcdctl endpoint health &> /dev/null; then
         echo "   ✅ etcd is ready"
+        break
+    fi
+    sleep 2
+done
+
+# Wait for valkey
+echo "   - Waiting for valkey..."
+for i in {1..30}; do
+    if docker exec vitess_valkey redis-cli -a valkeypass ping &> /dev/null; then
+        echo "   ✅ valkey is ready"
         break
     fi
     sleep 2
@@ -89,6 +99,7 @@ echo "Access points:"
 echo "  - MediaWiki:    http://localhost:8080"
 echo "  - Vitess VTGate: localhost:15306"
 echo "  - Vitess UI:     http://localhost:15999"
+echo "  - Valkey:       localhost:6379"
 echo "  - SeaweedFS:     http://localhost:8333"
 echo ""
 echo "📊 Stack status:"
