@@ -1,36 +1,33 @@
 services:
   mediawiki:
+    container_name: mediawiki
     build:
       context: .
       dockerfile: Dockerfile.mediawiki
     environment:
-        WG_EXTERNALSTORE_CLASS: ExternalStoreS3
-        WG_EXTERNALSTORE_S3_ENDPOINT: http://seaweedfs:8333
-        WG_EXTERNALSTORE_S3_BUCKET: testbucket
-        WG_EXTERNALSTORE_S3_KEY: fakekey
-        WG_EXTERNALSTORE_S3_SECRET: fakesecret
+      WG_EXTERNALSTORE_CLASS: ExternalStoreS3
+      WG_EXTERNALSTORE_S3_ENDPOINT: http://seaweedfs:8333
+      WG_EXTERNALSTORE_S3_BUCKET: testbucket
+      WG_EXTERNALSTORE_S3_KEY: fakekey
+      WG_EXTERNALSTORE_S3_SECRET: fakesecret
+      MW_ROLE: main
     image: mediawiki-dev:latest
     depends_on:
       valkey:
         condition: service_healthy
       vitess:
-        condition: service_started
+        condition: service_healthy
       seaweedfs:
         condition: service_healthy
       s3-create-bucket:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "php8.3", "-v", ">/dev/null", "2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
 
-  mediawiki-jobrunner:
-    image: mediawiki-dev:latest
-    depends_on:
-      mediawiki:
-        condition: service_started
-    command:
-      - php
-      - maintenance/run.php
-      - runJobs.php
-      - --maxjobs=100
-      
   seaweedfs:
     image: chrislusf/seaweedfs:latest
     container_name: seaweedfs
@@ -84,6 +81,7 @@ services:
   # -- Valkey --
   valkey:
     image: valkey/valkey:latest
+    container_name: valkey
     ports:
       - "6379:6379"
     command: >
@@ -97,6 +95,7 @@ services:
 
   vitess:
     image: vitess/vttestserver:mysql80
+    container_name: vitess
     environment:
       KEYSPACES: page
       NUM_SHARDS: 2
@@ -111,3 +110,47 @@ services:
 
       # optional: raw MySQL for debug (PORT + 1)
       - "15307:15307"
+    healthcheck:
+      test:
+        [
+        "CMD",
+        "mysql",
+        "-h",
+        "127.0.0.1",
+        "-P",
+        "15309",
+        "-e",
+        "select 1"
+      ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mediawiki-testrunner:
+    image: mediawiki-dev:latest
+    container_name: testrunner
+    depends_on:
+      mediawiki:
+        condition: service_healthy
+    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
+    volumes:
+      - ./:/var/www/html/w:cached
+    env_file:
+      - '.env'
+    environment:
+      MW_INSTALL_PATH: /var/www/html/w
+      MW_LOG_DIR: /var/www/html/w/cache
+      MW_ROLE: runner
+    entrypoint: ["/bin/bash", "-lc"]
+    command: |
+      set -euo pipefail
+
+      cd /var/www/html/w
+
+      echo "===> Running PHPUnit tests"
+      php tests/phpunit/phpunit.php
+
+      echo "===> Running parser tests"
+      php tests/parser/parserTests.php
+
+      echo "===> All tests passed ✅"
