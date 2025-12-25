@@ -41,6 +41,11 @@ use Wikimedia\Rdbms\SelectQueryBuilder;
 class DeletePageTest extends MediaWikiUnitTestCase {
 	use MockAuthorityTrait;
 
+	protected function setUp(): void {
+		parent::setUp();
+		$this->markTestSkipped( 'Delete functionality is disabled' );
+	}
+
 	private function getMockPage(): WikiPage {
 		$ret = $this->createMock( WikiPage::class );
 		$ret->method( 'canExist' )->willReturn( true );

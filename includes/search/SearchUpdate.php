@@ -64,6 +64,7 @@ class SearchUpdate {
 	 * Perform actual update for the entry
 	 */
 	public function doUpdate() {
+		return;
 		$services = MediaWikiServices::getInstance();
 		$searchEngineConfig = $services->getSearchEngineConfig();
 

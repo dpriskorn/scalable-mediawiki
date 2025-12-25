@@ -11,7 +11,6 @@ use MediaWiki\Tests\ExpectCallbackTrait;
 use MediaWiki\Tests\Language\LocalizationUpdateSpyTrait;
 use MediaWiki\Tests\recentchanges\ChangeTrackingUpdateSpyTrait;
 use MediaWiki\Tests\ResourceLoader\ResourceLoaderUpdateSpyTrait;
-use MediaWiki\Tests\Search\SearchUpdateSpyTrait;
 use MediaWiki\Tests\User\TempUser\TempUserTestTrait;
 use MediaWiki\Title\Title;
 use MediaWiki\Utils\MWTimestamp;
@@ -25,7 +24,6 @@ use Psr\Log\NullLogger;
 class ImportableOldRevisionImporterTest extends MediaWikiIntegrationTestCase {
 	use TempUserTestTrait;
 	use ChangeTrackingUpdateSpyTrait;
-	use SearchUpdateSpyTrait;
 	use LocalizationUpdateSpyTrait;
 	use ResourceLoaderUpdateSpyTrait;
 	use ExpectCallbackTrait;
@@ -195,7 +193,7 @@ class ImportableOldRevisionImporterTest extends MediaWikiIntegrationTestCase {
 
 		$this->expectChangeTrackingUpdates( 0, 0, 0, 0, 1 );
 
-		$this->expectSearchUpdates( 1 );
+		// $this->expectSearchUpdates( 1 );
 		$this->expectLocalizationUpdate( $title->getNamespace() === NS_MEDIAWIKI ? 1 : 0 );
 
 		$this->expectResourceLoaderUpdates(

@@ -47,7 +47,7 @@ sftp-config.json
 /images/tmp
 /maintenance/.mweval_history
 /maintenance/.mwsql_history
-/LocalSettings.php
+#/LocalSettings.php
 /includes/PlatformSettings.php
 
 # Building & testing

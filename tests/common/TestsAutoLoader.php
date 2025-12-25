@@ -224,10 +224,7 @@ $wgAutoloadClasses += [
 	'MediaWiki\\Tests\\ParamValidator\\TypeDef\\TypeDefIntegrationTestCase' => "$testDir/phpunit/includes/ParamValidator/TypeDef/TypeDefIntegrationTestCase.php",
 
 	# tests/phpunit/unit/includes/ParamValidator
-	'MediaWiki\\Tests\\ParamValidator\\TypeDef\\TypeDefUnitTestCase' => "$testDir/phpunit/unit/includes/ParamValidator/TypeDef/TypeDefUnitTestCase.php",
-
-	# tests/phpunit/unit/includes/Search
-	'MediaWiki\Tests\Search\SearchUpdateSpyTrait' => "$testDir/phpunit/includes/search/SearchUpdateSpyTrait.php",
+	'MediaWiki\\Tests\\ParamValidator\\TypeDef\\TypeDefUnitTestCase' => "$testDir/phpunit/includes/ParamValidator/TypeDef/TypeDefUnitTestCase.php",
 
 	# tests/phpunit/maintenance
 	'MediaWiki\\Tests\\Maintenance\\DumpAsserter' => "$testDir/phpunit/maintenance/DumpAsserter.php",

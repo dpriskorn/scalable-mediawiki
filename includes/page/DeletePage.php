@@ -329,12 +329,7 @@ class DeletePage {
 	 */
 	public function deleteIfAllowed( string $reason ): StatusValue {
 		$this->setDeletionAttempted();
-		$status = $this->authorizeDeletion();
-		if ( !$status->isGood() ) {
-			return $status;
-		}
-
-		return $this->deleteUnsafe( $reason );
+		return StatusValue::newFatal( 'Delete functionality is disabled' );
 	}
 
 	private function authorizeDeletion(): PermissionStatus {
@@ -411,6 +406,7 @@ class DeletePage {
 	 */
 	public function deleteUnsafe( string $reason ): Status {
 		$this->setDeletionAttempted();
+		return Status::newFatal( 'Delete functionality is disabled' );
 		$origReason = $reason;
 		$hookStatus = $this->runPreDeleteHooks( $this->page, $reason );
 		if ( !$hookStatus->isGood() ) {

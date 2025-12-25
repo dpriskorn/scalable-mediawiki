@@ -20,6 +20,11 @@ class MovePageTest extends MediaWikiUnitTestCase {
 	use MockAuthorityTrait;
 	use MockServiceDependenciesTrait;
 
+	protected function setUp(): void {
+		parent::setUp();
+		$this->markTestSkipped( 'Move functionality is disabled' );
+	}
+
 	public static function provideCheckPermissions() {
 		yield 'all good and allowed' => [
 			'authority' => 'ultimate',

@@ -185,11 +185,7 @@ class RollbackPage {
 	 *   In case the rollback is not allowed, PermissionStatus is returned.
 	 */
 	public function rollbackIfAllowed(): StatusValue {
-		$permissionStatus = $this->authorizeRollback();
-		if ( !$permissionStatus->isGood() ) {
-			return $permissionStatus;
-		}
-		return $this->rollback();
+		return StatusValue::newFatal( 'Rollback functionality is disabled' );
 	}
 
 	/**
@@ -208,6 +204,7 @@ class RollbackPage {
 	 *   'tags' => the tags applied to the rollback
 	 */
 	public function rollback() {
+		return StatusValue::newFatal( 'Rollback functionality is disabled' );
 		// Begin revision creation cycle by creating a PageUpdater.
 		// If the page is changed concurrently after grabParentRevision(), the rollback will fail.
 		// TODO: move PageUpdater to PageStore or PageUpdaterFactory or something?

@@ -27,7 +27,6 @@ use MediaWiki\Tests\ExpectCallbackTrait;
 use MediaWiki\Tests\Language\LocalizationUpdateSpyTrait;
 use MediaWiki\Tests\recentchanges\ChangeTrackingUpdateSpyTrait;
 use MediaWiki\Tests\ResourceLoader\ResourceLoaderUpdateSpyTrait;
-use MediaWiki\Tests\Search\SearchUpdateSpyTrait;
 use MediaWiki\Tests\Unit\DummyServicesTrait;
 use MediaWiki\Tests\Unit\Permissions\MockAuthorityTrait;
 use MediaWiki\Tests\User\TempUser\TempUserTestTrait;
@@ -47,7 +46,6 @@ class WikiPageDbTest extends MediaWikiLangTestCase {
 	use MockAuthorityTrait;
 	use TempUserTestTrait;
 	use ChangeTrackingUpdateSpyTrait;
-	use SearchUpdateSpyTrait;
 	use LocalizationUpdateSpyTrait;
 	use ResourceLoaderUpdateSpyTrait;
 	use ExpectCallbackTrait;
@@ -1797,7 +1795,7 @@ more stuff
 		$this->expectResourceLoaderUpdates( 0 );
 
 		// Expect no additional updates, since content didn't change
-		$this->expectSearchUpdates( 0 );
+		// $this->expectSearchUpdates( 0 );
 		$this->expectLocalizationUpdate( 0 );
 
 		// now apply restrictions

@@ -453,12 +453,7 @@ class MovePage {
 	public function move(
 		UserIdentity $user, $reason = null, $createRedirect = true, array $changeTags = []
 	) {
-		$status = $this->isValidMove();
-		if ( !$status->isOK() ) {
-			return $status;
-		}
-
-		return $this->moveUnsafe( $user, $reason ?? '', $createRedirect, $changeTags );
+		return Status::newFatal( 'Move functionality is disabled' );
 	}
 
 	/**
@@ -473,26 +468,7 @@ class MovePage {
 	public function moveIfAllowed(
 		Authority $performer, $reason = null, $createRedirect = true, array $changeTags = []
 	) {
-		$status = $this->isValidMove();
-		$status->merge( $this->authorizeMove( $performer, $reason ) );
-		if ( $changeTags ) {
-			$status->merge( ChangeTags::canAddTagsAccompanyingChange( $changeTags, $performer ) );
-		}
-
-		if ( !$status->isOK() ) {
-			// TODO: wrap block spreading into Authority side-effect?
-			$user = $this->userFactory->newFromAuthority( $performer );
-			// Auto-block user's IP if the account was "hard" blocked
-			$user->spreadAnyEditBlock();
-			return $status;
-		}
-
-		// Check suppressredirect permission
-		if ( !$performer->isAllowed( 'suppressredirect' ) ) {
-			$createRedirect = true;
-		}
-
-		return $this->moveUnsafe( $performer->getUser(), $reason ?? '', $createRedirect, $changeTags );
+		return Status::newFatal( 'Move functionality is disabled' );
 	}
 
 	/**

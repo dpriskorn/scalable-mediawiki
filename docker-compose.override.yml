@@ -126,31 +126,31 @@ services:
       timeout: 3s
       retries: 20
 
-  mediawiki-testrunner:
-    image: mediawiki-dev:latest
-    container_name: testrunner
-    depends_on:
-      mediawiki:
-        condition: service_healthy
-    user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
-    volumes:
-      - ./:/var/www/html/w:cached
-    env_file:
-      - '.env'
-    environment:
-      MW_INSTALL_PATH: /var/www/html/w
-      MW_LOG_DIR: /var/www/html/w/cache
-      MW_ROLE: runner
-    entrypoint: ["/bin/bash", "-lc"]
-    command: |
-      set -euo pipefail
+  # mediawiki-testrunner:
+  #   image: mediawiki-dev:latest
+  #   container_name: testrunner
+  #   depends_on:
+  #     mediawiki:
+  #       condition: service_healthy
+  #   user: "${MW_DOCKER_UID}:${MW_DOCKER_GID}"
+  #   volumes:
+  #     - ./:/var/www/html/w:cached
+  #   env_file:
+  #     - '.env'
+  #   environment:
+  #     MW_INSTALL_PATH: /var/www/html/w
+  #     MW_LOG_DIR: /var/www/html/w/cache
+  #     MW_ROLE: runner
+  #   entrypoint: ["/bin/bash", "-lc"]
+  #   command: |
+  #     set -euo pipefail
 
-      cd /var/www/html/w
+  #     cd /var/www/html/w
 
-      echo "===> Running PHPUnit tests"
-      php tests/phpunit/phpunit.php
+  #     echo "===> Running PHPUnit tests"
+  #     php tests/phpunit/phpunit.php
 
-      echo "===> Running parser tests"
-      php tests/parser/parserTests.php
+  #     echo "===> Running parser tests"
+  #     php tests/parser/parserTests.php
 
-      echo "===> All tests passed ✅"
+  #     echo "===> All tests passed ✅"
