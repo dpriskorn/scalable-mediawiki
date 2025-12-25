@@ -84,21 +84,21 @@ $wgAutoloadClasses += [
 	'FactoryArgTestTrait' => "$testDir/phpunit/unit/includes/FactoryArgTestTrait.php",
 	'TestLogger' => "$testDir/phpunit/mocks/TestLogger.php",
 
-	# tests/phpunit/includes/api
-	'ApiQueryTestBase' => "$testDir/phpunit/includes/api/query/ApiQueryTestBase.php",
-	'ApiTestCase' => "$testDir/phpunit/includes/api/ApiTestCase.php",
-	'ApiTestContext' => "$testDir/phpunit/includes/api/ApiTestContext.php",
-	'ApiUploadTestCase' => "$testDir/phpunit/includes/api/ApiUploadTestCase.php",
-	'RandomImageGenerator' => "$testDir/phpunit/includes/api/RandomImageGenerator.php",
-	'MediaWiki\\Tests\\Api\\Format\\ApiFormatTestBase' => "$testDir/phpunit/includes/api/format/ApiFormatTestBase.php",
-	'MediaWiki\\Tests\\Api\\Query\\ApiQueryTestBase' => "$testDir/phpunit/includes/api/query/ApiQueryTestBase.php",
-	'MediaWiki\\Tests\\Api\\Query\\ApiQueryContinueTestBase' => "$testDir/phpunit/includes/api/query/ApiQueryContinueTestBase.php",
-	'MediaWiki\\Tests\\Api\\ApiTestCase' => "$testDir/phpunit/includes/api/ApiTestCase.php",
-	'MediaWiki\\Tests\\Api\\ApiTestContext' => "$testDir/phpunit/includes/api/ApiTestContext.php",
-	'MediaWiki\\Tests\\Api\\ApiUploadTestCase' => "$testDir/phpunit/includes/api/ApiUploadTestCase.php",
-	'MediaWiki\\Tests\\Api\\MockApi' => "$testDir/phpunit/includes/api/MockApi.php",
-	'MediaWiki\\Tests\\Api\\MockApiQueryBase' => "$testDir/phpunit/includes/api/MockApiQueryBase.php",
-	'MediaWiki\\Tests\\Api\\RandomImageGenerator' => "$testDir/phpunit/includes/api/RandomImageGenerator.php",
+	# tests/phpunit/includes/api - DISABLED (files don't exist)
+	# 'ApiQueryTestBase' => "$testDir/phpunit/includes/api/query/ApiQueryTestBase.php",
+	# 'ApiTestCase' => "$testDir/phpunit/includes/api/ApiTestCase.php",
+	# 'ApiTestContext' => "$testDir/phpunit/includes/api/ApiTestContext.php",
+	# 'ApiUploadTestCase' => "$testDir/phpunit/includes/api/ApiUploadTestCase.php",
+	# 'RandomImageGenerator' => "$testDir/phpunit/includes/api/RandomImageGenerator.php",
+	# 'MediaWiki\\Tests\\Api\\Format\\ApiFormatTestBase' => "$testDir/phpunit/includes/api/format/ApiFormatTestBase.php",
+	# 'MediaWiki\\Tests\\Api\\Query\\ApiQueryTestBase' => "$testDir/phpunit/includes/api/query/ApiQueryTestBase.php",
+	# 'MediaWiki\\Tests\\Api\\Query\\ApiQueryContinueTestBase' => "$testDir/phpunit/includes/api/query/ApiQueryContinueTestBase.php",
+	# 'MediaWiki\\Tests\\Api\\ApiTestCase' => "$testDir/phpunit/includes/api/ApiTestCase.php",
+	# 'MediaWiki\\Tests\\Api\\ApiTestContext' => "$testDir/phpunit/includes/api/ApiTestContext.php",
+	# 'MediaWiki\\Tests\\Api\\ApiUploadTestCase' => "$testDir/phpunit/includes/api/ApiUploadTestCase.php",
+	# 'MediaWiki\\Tests\\Api\\MockApi' => "$testDir/phpunit/includes/api/MockApi.php",
+	# 'MediaWiki\\Tests\\Api\\MockApiQueryBase' => "$testDir/phpunit/includes/api/MockApiQueryBase.php",
+	# 'MediaWiki\\Tests\\Api\\RandomImageGenerator' => "$testDir/phpunit/includes/api/RandomImageGenerator.php",
 
 	# tests/phpunit/includes/auth
 	'MediaWiki\\Auth\\AuthenticationRequestTestCase' =>
@@ -224,7 +224,7 @@ $wgAutoloadClasses += [
 	'MediaWiki\\Tests\\ParamValidator\\TypeDef\\TypeDefIntegrationTestCase' => "$testDir/phpunit/includes/ParamValidator/TypeDef/TypeDefIntegrationTestCase.php",
 
 	# tests/phpunit/unit/includes/ParamValidator
-	'MediaWiki\\Tests\\ParamValidator\\TypeDef\\TypeDefUnitTestCase' => "$testDir/phpunit/includes/ParamValidator/TypeDef/TypeDefUnitTestCase.php",
+	'MediaWiki\\Tests\\ParamValidator\\TypeDef\\TypeDefUnitTestCase' => "$testDir/phpunit/unit/includes/ParamValidator/TypeDef/TypeDefUnitTestCase.php",
 
 	# tests/phpunit/maintenance
 	'MediaWiki\\Tests\\Maintenance\\DumpAsserter' => "$testDir/phpunit/maintenance/DumpAsserter.php",

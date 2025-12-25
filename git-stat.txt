@@ -1,20 +1,4 @@
- .gitignore                                         |   2 +-
- docker-compose.override.yml                        |  48 +--
- git-stat.txt                                       | 358 ---------------------
- includes/page/DeletePage.php                       |   8 +-
- includes/page/MovePage.php                         |  28 +-
- includes/page/RollbackPage.php                     |   7 +-
- includes/search/SearchUpdate.php                   |   1 +
- skins/Vector                                       |   2 +-
- tests/common/TestsAutoLoader.php                   |   5 +-
- tests/phpunit/includes/Storage/PageUpdaterTest.php |  11 +-
- .../includes/filerepo/file/LocalFileTest.php       |   4 +-
- .../import/ImportableOldRevisionImporterTest.php   |   4 +-
- tests/phpunit/includes/page/MovePageTest.php       |   7 +-
- tests/phpunit/includes/page/UndeletePageTest.php   |   4 +-
- tests/phpunit/includes/page/WikiPageDbTest.php     |   4 +-
- .../integration/includes/page/DeletePageTest.php   |  11 +-
- .../integration/includes/page/RollbackPageTest.php |   7 +-
- .../phpunit/unit/includes/page/DeletePageTest.php  |   5 +
- tests/phpunit/unit/includes/page/MovePageTest.php  |   5 +
- 19 files changed, 67 insertions(+), 454 deletions(-)
+ git-stat.txt |  20 --------
+ skins/Vector |   2 +-
+ start.sh     | 148 +++++++++++++++++++++++++++++------------------------------
+ 3 files changed, 75 insertions(+), 95 deletions(-)
